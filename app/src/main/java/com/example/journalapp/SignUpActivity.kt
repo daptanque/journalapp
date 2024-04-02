@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.journalapp.databinding.ActivitySignUpBinding
 import com.google.android.gms.common.util.DataUtils
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -52,6 +53,11 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    private fun updateUI(user: FirebaseUser?) {
+
+    }
+
+
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -61,6 +67,9 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    private fun reload() {
+
+    }
 
 
 }
