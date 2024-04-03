@@ -86,7 +86,7 @@ class JournalList : AppCompatActivity() {
         super.onStart()
 
         collectionReference
-            .whereEqualTo("userId", JournalUser.instance.userId)
+            .whereEqualTo("userId", JournalUser.instance?.userId)
             .get()
             .addOnSuccessListener {
                 if(!it.isEmpty){
