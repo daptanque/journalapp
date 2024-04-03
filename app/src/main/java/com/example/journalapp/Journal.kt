@@ -3,13 +3,13 @@ package com.example.journalapp
 import java.sql.Timestamp
 
 data class Journal(
-    private val title: String,
-    private val thoughts: String,
-    private val imageUrl: String,
+    val title: String,
+    val thoughts: String,
+    val imageUrl: Int,
 
-    private val userId: String,
-    private val timeAdded: Timestamp,
-    private val username: String
+    val userId: String,
+    val timeAdded: Timestamp,
+    val username: String
 ) {
 
 }

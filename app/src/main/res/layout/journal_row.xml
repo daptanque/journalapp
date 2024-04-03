@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <data>
+        <variable
+            name="journal"
+            type="com.example.journalapp.Journal" />
+    </data>
+
+
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true"
     android:layout_margin="5dp">
@@ -17,14 +25,15 @@
         android:alpha="0.8">
 
         <TextView
+            android:id="@+id/journal_row_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:textSize="17sp"
             android:layout_weight="1"
             android:padding="3dp"
-            android:text="Title"
-            android:id="@+id/journal_row_username" />
+            android:text="@{journal.username}"
+             />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -40,6 +49,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:background="@{journal.imageUrl }"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
@@ -52,7 +62,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="Title"
+            android:text="@{journal.title}"
             android:padding="10dp"
             android:id="@+id/journal_title_list" />
 
@@ -61,7 +71,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/journal_thought_list"
             android:padding="10dp"
-            android:text="Description"
+            android:text="@{journal.thoughts}"
             android:textSize="18sp"
             android:paddingTop="15dp"
             android:paddingStart="10dp"
@@ -73,7 +83,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/journal_timestamp_list"
             android:padding="5dp"
-            android:text="Date create"
+            android:text="@{journal.timeAdded.toString()}"
             android:textStyle="italic" />
 
     </LinearLayout>
