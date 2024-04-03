@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.journalapp.databinding.ActivityJournalListBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -86,13 +87,26 @@ class JournalList : AppCompatActivity() {
         super.onStart()
 
         collectionReference
-            .whereEqualTo("userId", JournalUser.instance?.userId)
+            .whereEqualTo("userId", firebaseUser.uid)
             .get()
             .addOnSuccessListener {
                 if(!it.isEmpty){
-                    it.forEach{
+                    /**it.forEach{
                         //convert Snapshots to Journal objects
-                        var journal = it.toObject(Journal::class.java)
+                        //var journal = it.toObject(Journal::class.java)
+
+                        journalList.add(journal)
+                    }**/
+
+                    for(document in it){
+                         var journal = Journal(
+                             document.data.get("title").toString(),
+                             document.data.get("thoughts").toString(),
+                             document.data.get("imageUrl").toString(),
+                             document.data.get("userId").toString(),
+                             document.data.get("timeAdded") as Timestamp,
+                             document.data.get("username").toString()
+                         )
 
                         journalList.add(journal)
                     }

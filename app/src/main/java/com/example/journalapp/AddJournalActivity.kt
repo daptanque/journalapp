@@ -11,6 +11,7 @@ import com.example.journalapp.databinding.ActivityAddJournalBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -47,24 +48,34 @@ class AddJournalActivity : AppCompatActivity() {
 
         storageReference = FirebaseStorage.getInstance().getReference()
 
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         binding.apply {
 
             postProgressBar.visibility = View.INVISIBLE
 
             if(JournalUser.instance != null){
-                currentUserId  = JournalUser.instance!!.userId.toString()
+                //currentUserId  = JournalUser.instance!!.userId.toString()
 
-                currentUserName  = JournalUser.instance!!.username.toString()
+                //currentUserName  = JournalUser.instance!!.username.toString()
+
+                currentUserId = auth.currentUser?.uid.toString()
+                currentUserName = auth.currentUser?.displayName.toString()
 
                 postUsernameTextview.text = currentUserName
 
             }
 
+            postCameraButton.setOnClickListener(){
+                var i : Intent = Intent(Intent.ACTION_GET_CONTENT)
+                i.setType("image/*")
+                startActivityForResult(i, 1)
+            }
+
             postSaveJournalButton.setOnClickListener(){
                 saveJournal()
             }
+
         }
     }
 
@@ -84,14 +95,14 @@ class AddJournalActivity : AppCompatActivity() {
             filePath.putFile(imageUrii)
                 .addOnSuccessListener(){
                     filePath.downloadUrl.addOnSuccessListener {
-                        var imageUri : String = it.toString()
+                        var imageUri : Uri = it
                         var timestamp : Timestamp = Timestamp(Date())
 
                         //creating the object of Journal
                         var journal : Journal = Journal(
                             title,
                             thoughts,
-                            imageUri,
+                            imageUri.toString(),
                             currentUserId,
                             timestamp,
                             currentUserName
