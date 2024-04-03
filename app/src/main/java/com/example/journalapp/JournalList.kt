@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -16,6 +18,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 
@@ -30,7 +33,7 @@ class JournalList : AppCompatActivity() {
     lateinit var storageReference : StorageReference
     var collectionReference : CollectionReference = db.collection("Journal")
 
-    lateinit var journalList : List<Journal>
+    lateinit var journalList : MutableList<Journal>
     lateinit var journalRecyclerAdapter: JournalRecyclerAdapter
 
     lateinit var noPostsTextView: TextView
@@ -75,6 +78,40 @@ class JournalList : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+
+    //Getting all posts
+    override fun onStart() {
+        super.onStart()
+
+        collectionReference
+            .whereEqualTo("userId", JournalUser.instance.userId)
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty){
+                    it.forEach{
+                        //convert Snapshots to Journal objects
+                        var journal = it.toObject(Journal::class.java)
+
+                        journalList.add(journal)
+                    }
+
+                    //RecyclerView
+                    journalRecyclerAdapter = JournalRecyclerAdapter(
+                        this,
+                        journalList
+                    )
+                    binding.recyclerView.setAdapter(journalRecyclerAdapter)
+                    journalRecyclerAdapter.notifyDataSetChanged()
+
+                }
+                else{
+                    binding.listNoPosts.visibility = View.VISIBLE
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Oops...", Toast.LENGTH_LONG).show()
+            }
     }
 
 }
